@@ -1,6 +1,6 @@
-Repo containing scripts and custom files needed to setup a server from scratch the Cerval Website server and later maybe other servers later on.
+This repo contains scripts and custom files needed to setup a server from scratch to serve the Cerval Website ecosystem, and later maybe other Cerval related servers as well.
 
-Note that these setup scripts are tested against Ubuntu specifically 20.04 LTS.
+Note that these setup scripts are tested against Ubuntu, specifically ubuntu 20.04 LTS, 64-bit.
 
 # Repo Structure
 
