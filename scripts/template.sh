@@ -22,20 +22,29 @@ readonly DOC_EXAMPLE="$0 example_arg"
 
 
 #check for needed inputs
-if [[ ! -z $1 || -z $2 ]]; then
+if [[  -z $1 || -z $2 ]]; then
     log_err "Missing required arguments!"
     help_text "$DOC_DESCRIPTION" "$DOC_USAGE" "$DOC_EXAMPLE"
     exit 1 # general Error
 fi
 
 
-# Task 1
+ui_section "Template Script"
 
-# Check if safe
+# Task 1
+ui_start_task "Task 1"
+
+
+# Check if safe and needed
+ui_task_note "Checking if task is safe to run and if it is needed."
 
 # Do task
+ui_task_note "Performing Task."
 
 # Check for errors
+ui_task_note "Checking for errors."
+
+ui_end_task
 
 
 
