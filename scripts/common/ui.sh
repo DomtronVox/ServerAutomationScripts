@@ -60,7 +60,7 @@ help_text() {
 
 
 ################
-# Task Relate UI Functions
+# Section and Task Relate UI Functions
 ################
 
 # Simple function that waits for a key press to continue.
@@ -70,6 +70,7 @@ ui_press_any_key() {
     local proceed
     read proceed
 }
+
 
 # Prints out a "Section" label and waits for user input before continuing.
 ## Needs 1 argument, a string dennoting the section's name.
@@ -88,9 +89,32 @@ ui_section() {
 }
 
 
+# Prints beginning section summery header
+## Needs 1 argumet, string dennoting section name
+ui_section_summery_start() {
+    local title=$1
+    log_msg "$(cat <<- HEREDOC
+	#################
+	#
+	# Summery for $title
+	#
+
+	HEREDOC
+    )"
+}
+
+
+# Prints section summery end and waits for user input before continuing.
+## Needs no arguments.
+ui_section_summery_end() {
+    log_msg "########"
+    ui_press_any_key
+}
+
+
 # Prints out a start task lable and waits for user input to continue
 ## Needs 1 argument, string with name describing the task
-ui_start_task() {
+ui_task_start() {
     local title=$1
     log_msg "$(cat <<- HEREDOC
 	-------------------------------------------
@@ -101,9 +125,10 @@ ui_start_task() {
     ui_press_any_key
 }
 
+
 # Prints out text dennoting a task has ended
 ## Needs no arguments
-ui_end_task() {
+ui_task_end() {
     log_msg "$(cat <<- HEREDOC
 
 	... ${BLUE}Task Done${NOCLR} ...
@@ -111,6 +136,7 @@ ui_end_task() {
 	HEREDOC
     )"
 }
+
 
 # Prints out a note formated to look like it's part of the task
 ## Needs 1 argument, string containing the note to print.

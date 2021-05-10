@@ -6,6 +6,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/common/source_all_common.sh"
 
 
 # Define the scripts help documentation variables that can be printed if the script is misused
+readonly DOC_NAME="Template Script"
 readonly DOC_DESCRIPTION="What this script does."
 readonly DOC_USAGE=$(cat <<- HEREDOC
 	How to use this script
@@ -29,10 +30,10 @@ if [[  -z $1 || -z $2 ]]; then
 fi
 
 
-ui_section "Template Script"
+ui_section "$DOC_NAME"
 
-# Task 1
-ui_start_task "Task 1"
+# Task 1 
+ui_task_start "Task 1"
 
 
 # Check if safe and needed
@@ -44,10 +45,26 @@ ui_task_note "Performing Task."
 # Check for errors
 ui_task_note "Checking for errors."
 
-ui_end_task
+ui_task_end
 
-
-
+#Task 2
+#...
 
 
 # Summery
+ui_section_summery_start "$DOC_NAME" 
+
+ui_task_note "First thing that was done."
+ui_task_note "Second thing that was done"
+
+if true; then
+    ui_task_note "Optional thing that was done."
+fi
+
+log_msg "$(cat <<- HEREDOC
+	Explanation of what should be done next.
+	HEREDOC
+)"
+
+ui_section_summery_end
+
