@@ -52,6 +52,6 @@ Any Task that multiple scripts may need to run will be extracted to it's own scr
 
 * Cyborg, not Robot: Scripts help make processes easier to do, but will still need intellegant choices from the user. Any script that must be fully automatic (cron job triggered scripts) should be likewise denoted in the name.
 * Attempted Portability: While portability is not a focus and we will not bend over backwards to make it so, we do attempt to pick portable options where possible.
-* Document Your Code: Every script should be well documented, both for the user and anyone who needs to maintaine it.
+* Document Your Code: Every script should be well documented, both for the user and anyone who needs to maintain it.
 
 
