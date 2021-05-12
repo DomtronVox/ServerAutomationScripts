@@ -31,7 +31,14 @@ log_msg() {
 # Logs an error using a red prefix to denote it as such.
 ## Needs 1 argument, the message to be printed.
 log_err() {
-    echo -e "${RED}/!\\ Error /!\\: $1 $NOCLR"
+    echo -e "${RED}/!\\ ERROR /!\\: $1 ${NOCLR}"
+}
+
+
+# Logs a warning. Message that is colored and formatted to draw attention to itself but is not nessisarily bad.
+## Needs 1 argument, message to print
+log_warn(){
+    echo -e "${YELLOW} [WARNING]: $1 ${NOCLR}"
 }
 
 

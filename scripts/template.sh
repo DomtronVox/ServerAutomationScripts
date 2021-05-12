@@ -47,7 +47,11 @@ task_1() {
     ui_task_note "Checking for errors."
 
 }
-if [ $perform_task -eq 0 ]; then task_1; fi
+if [ $perform_task -eq 0 ]; then 
+    task_1; 
+else
+    log_warn "You chose not to run this task."
+fi
 ui_task_end
 
 #Task 2
