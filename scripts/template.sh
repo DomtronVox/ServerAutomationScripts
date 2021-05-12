@@ -34,17 +34,20 @@ ui_section "$DOC_NAME"
 
 # Task 1 
 ui_task_start "Task 1"
+perform_task=$?
 
+task_1() {
+    # Check if safe and needed
+    ui_task_note "Checking if task is safe to run and if it is needed."
 
-# Check if safe and needed
-ui_task_note "Checking if task is safe to run and if it is needed."
+    # Do task
+    ui_task_note "Performing Task."
 
-# Do task
-ui_task_note "Performing Task."
+    # Check for errors
+    ui_task_note "Checking for errors."
 
-# Check for errors
-ui_task_note "Checking for errors."
-
+}
+if [ $perform_task -eq 0 ]; then task_1; fi
 ui_task_end
 
 #Task 2

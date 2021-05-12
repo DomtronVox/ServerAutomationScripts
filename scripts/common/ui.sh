@@ -22,9 +22,9 @@ BLUE='\033[34m'     #code: 34
 
 
 # Logs a simple message to StdOut. May have it write to a log or be colored at some point so nice to have a centeral function handle this.
-## Needs 1 argument, the message to be printed.
+## Needs 1 argument, the message to be printed. Optionally add aditional options to echo as a second argument.
 log_msg() {
-    echo -e "$1"
+    echo -e "$2" "$1"
 }
 
 
@@ -58,9 +58,8 @@ help_text() {
 }
 
 
-
 ################
-# Section and Task Relate UI Functions
+# User Input Functions
 ################
 
 # Simple function that waits for a key press to continue.
@@ -70,6 +69,58 @@ ui_press_any_key() {
     local proceed
     read proceed
 }
+
+
+# Requests a Y/n answer and returns fail or sucess based on the answer
+## Optionally needs 2 args, a string that is a msg to print and a optional letter (y or n) that indicates the default
+##Returns 0 if yes was selected and 1 if no was selected
+ui_query_yn() {
+    local msg=$1
+    local default_choice=$2
+    
+    #First define what the option string should be and make the default choice a returnable value (exit code)
+    if [[ "$default_choice" == "y" || "$default_choice" == "yes" ]]; then
+        local option_str="[Y/n]"
+	default_choice=0
+    else
+        local option_str="[y/N]"
+	default_choice=1
+    fi
+    
+    local answer
+
+    #Next do a loop where we look for a specific answer. We keep going until we return from the function
+    while true; do
+        #tell user what they are inputing for, and the default answer. Also don't add a new line.
+        log_msg ">>> ${msg} ${option_str}: " "-n"
+
+        read answer
+
+	#force input to be lower case so we have to test against fewer options
+        answer="$(echo "$answer" | tr "[:upper:]" "[:lower:]" )"
+
+	#determin what the answer is and return the appropriate exit code
+        if [[ "$answer" == "y" || "$answer" == "yes" ]]; then
+            log_msg "<<< Ok, you said $answer"
+            return 0
+        elif [[ "$answer" == "n" || "$answer" == "no" ]]; then
+            log_msg "<<< Ok, you said $answer"
+            return 1
+	elif [[ -z $answer ]]; then
+            log_msg "<<< Ok, you picked the default choice."
+            return "$default_choice"
+        fi
+
+	#if we get here without returning from the function the entered answer was invalid.
+	## Tell the user then start the loop again.
+	log_err " Try again. Invalid entry: $answer "
+    done
+}
+
+
+################
+# Section and Task Relate UI Functions
+################
 
 
 # Prints out a "Section" label and waits for user input before continuing.
@@ -107,22 +158,25 @@ ui_section_summery_start() {
 # Prints section summery end and waits for user input before continuing.
 ## Needs no arguments.
 ui_section_summery_end() {
-    log_msg "########"
+    log_msg "################"
     ui_press_any_key
 }
 
 
-# Prints out a start task lable and waits for user input to continue
+# Prints out a start task lable and prompts user whether to perform the task or not
 ## Needs 1 argument, string with name describing the task
+## Returns 0 for perform task and 1 for do not perform task.
 ui_task_start() {
     local title=$1
     log_msg "$(cat <<- HEREDOC
+	
 	-------------------------------------------
 	... Begining Task: ${GREEN}${title}${NOCLR} ...
 	HEREDOC
     )"
 
-    ui_press_any_key
+    ui_query_yn "Perform task ${title}?" "n"
+    return $?
 }
 
 
@@ -130,9 +184,10 @@ ui_task_start() {
 ## Needs no arguments
 ui_task_end() {
     log_msg "$(cat <<- HEREDOC
-
-	... ${BLUE}Task Done${NOCLR} ...
+	
+	... ${BLUE}Ending Task${NOCLR} ...
 	------------------------------------------
+	 
 	HEREDOC
     )"
 }
