@@ -37,6 +37,18 @@ replace_tag() {
     local replace_text="$3"
 
     #Uses a global substitution regex to replace all instances of tag with replace_text
-    sed --in-place "s+${tag}+${replace_text}+g" "$replace_text"
+    sed --in-place "s+${tag}+${replace_text}+g" "$filepath"
 }
 
+
+###########
+# Redefine pushd/popd to be quiet
+##########
+
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+popd () {
+    command popd "$@" > /dev/null
+}
