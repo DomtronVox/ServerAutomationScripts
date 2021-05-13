@@ -1,0 +1,39 @@
+# Template config for a nginx reverse proxy domain with SSL. Tags: <<FQDN>>, <<REDIRECT_PORT>>, <<ORGANIZATION>>
+
+
+
+# Reverse proxy with SSL configuration
+
+server {
+
+    server_name <<FQDN>>;
+
+    #We are acting as a proxy so we forward requests for the above domain to the application
+    ## running on the localhost at
+    location / {
+        proxy_pass http://127.0.0.1:<<REDIRECT_PORT>>;
+        proxy_set_header Host $host;
+    }
+
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+
+    ssl_certificate /srv/<<ORGANIZATION>>/<<FQDN>>/ssl/fullchain.pem; 
+    ssl_certificate_key /srv/<<ORGANIZATION>>/<<FQDN>>/ssl/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; 
+}
+
+server {
+
+    if ($host = <<FQDN>>) {
+        return 301 https://$host$request_uri;
+    } 
+
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    server_name <<FQDN>>;
+    return 404;
+}
