@@ -26,6 +26,9 @@ We aim for these scripts to create and maintain a server to do the following:
 * Our custom CDN for mod distribution.
 * Everything using a unified style and navigation header.
 
+## /srv
+Most application files, logs, etc live in a directory under /srv and then are symlinked where they need to be, so we have an easy place to access everything for backing up.
+
 # Usage
 
 ## Prep
@@ -53,5 +56,5 @@ Any Task that multiple scripts may need to run will be extracted to it's own scr
 * Cyborg, not Robot: Scripts help make processes easier to do, but will still need intellegant choices from the user. Any script that must be fully automatic (cron job triggered scripts) should be likewise denoted in the name.
 * Attempted Portability: While portability is not a focus and we will not bend over backwards to make it so, we do attempt to pick portable options where possible.
 * Document Your Code: Every script should be well documented, both for the user and anyone who needs to maintain it.
-
+* Use Full Argument Names: Whenever possible, scripts should use the full opt name for commands (I.e. --help instead of -h, --follow instead of -f). Short opts are useful when you're running a command one off, but for scripts using the full name makes things more readable.
 
