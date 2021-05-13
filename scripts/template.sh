@@ -23,7 +23,7 @@ readonly DOC_EXAMPLE="$0 example_arg"
 
 
 #check for needed inputs
-if [[  -z $1 || -z $2 ]]; then
+if [[  -z "$1" || -z "$2" ]]; then
     log_err "Missing required arguments!"
     help_text "$DOC_DESCRIPTION" "$DOC_USAGE" "$DOC_EXAMPLE"
     exit 1 # general Error
@@ -47,7 +47,7 @@ task_1() {
     ui_task_note "Checking for errors."
 
 }
-if [ $perform_task -eq 0 ]; then 
+if [ "$perform_task" -eq 0 ]; then 
     task_1; 
     sucessfuly_compleated_task_1=$?
 else
@@ -73,7 +73,10 @@ else
 fi
 
 log_msg "$(cat <<- HEREDOC
+	 
+	>Further Instructions<
 	Explanation of what should be done next.
+	 
 	HEREDOC
 )"
 
