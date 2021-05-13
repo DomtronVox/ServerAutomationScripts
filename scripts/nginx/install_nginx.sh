@@ -52,7 +52,7 @@ install_nginx() {
 
     return 0
 }
-if [ $perform_task -eq 0 ]; then 
+if [ "$perform_task" -eq 0 ]; then 
     install_nginx
     installed_nginx=$?
 else

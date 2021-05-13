@@ -49,8 +49,10 @@ task_1() {
 }
 if [ $perform_task -eq 0 ]; then 
     task_1; 
+    sucessfuly_compleated_task_1=$?
 else
     log_warn "You chose not to run this task."
+    sucessfuly_compleated_task_1=1
 fi
 ui_task_end
 
@@ -64,8 +66,10 @@ ui_section_summery_start "$DOC_NAME"
 ui_task_note "First thing that was done."
 ui_task_note "Second thing that was done"
 
-if true; then
+if [ "$sucessfuly_compleated_task_1" -eq 0 ]; then
     ui_task_note "Optional thing that was done."
+else
+    log_warn "Did not successfully complete task 1. See above messages for reason."
 fi
 
 log_msg "$(cat <<- HEREDOC
