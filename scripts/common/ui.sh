@@ -51,7 +51,7 @@ help_text() {
     local -r EXAMPLE=$3
 
     #Describes highlevel use for the script
-    log_msg "${YELLOW}Description: $DESCRIPTION"
+    log_msg "${GREEN}Description: $DESCRIPTION"
 
     echo "" # newline spacer
 
@@ -74,7 +74,9 @@ help_text() {
 ui_press_any_key() {
     log_msg ">>> Press any key to continue <<<"
     local proceed
-    read proceed
+    read -n 1 -s proceed 
+    # -n x reads x characters instead of waiting for a newline. so triggers after pressing any keys 
+    # -s makes read no echo typed characters
 }
 
 
