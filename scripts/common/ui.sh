@@ -22,7 +22,7 @@ BLUE='\033[34m'     #code: 34
 
 
 # Logs a simple message to StdOut. May have it write to a log or be colored at some point so nice to have a centeral function handle this.
-## Needs 1 argument, the message to be printed. Optionally add aditional options to echo as a second argument.
+## Needs 1 argument, the message to be printed. Optionally will pass anything in second argument as aditional options to echo.
 log_msg() {
     echo -e "$2" "$1"
 }
@@ -124,6 +124,25 @@ ui_query_yn() {
 	## Tell the user then start the loop again.
 	log_err " Try again. Invalid entry: $answer "
     done
+}
+
+
+# Prompts user to input hidden text for something like a password.
+## Needs 2 arguments. fisrt argument is the message used to prompt the input, second is variable name to store the password in
+ui_query_hidden_input() {
+    local msg=$1
+    local output_var_name=$2
+    local input=""
+    log_msg "$msg" "-n" #-n so we don't print a new line
+    read -s input
+
+    #prints the passward with all characters replaced with *'s
+    echo "$input" | sed --regexp-extended 's/./*/g'
+
+    #Basically uses ui_query_hidden_input's 2nd argument as the name for a new variable where we then store the input text.
+    #Since this new variable isn't defined as local it escapes the function's scope and can be used by the calling script.
+    #Note: The -g makes the declaration global instead of local to the function.
+    declare -g "${output_var_name}"="$input"
 }
 
 
