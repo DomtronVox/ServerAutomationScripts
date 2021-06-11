@@ -6,12 +6,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/../common/source_all_common.sh"
 
 # Define the scripts help documentation variables that can be printed if the script is misused
 readonly DOC_NAME="Setup NGINX Reverse Proxy Domain"
-readonly DOC_DESCRIPTION="Creates the configuration so NGINX redirects traffic for a given FQDN to a localhost port that the application is running on.."
+readonly DOC_DESCRIPTION="Creates the configuration so NGINX redirects traffic for a given FQDN to a localhost port that the application is running on. Also makes usre it is secured with an SSL."
 readonly DOC_USAGE=$(cat <<- HEREDOC
 	Provide a Fully Qualified Domain Name and localhost Port for an application running on the server.
 	  FQDN: Domain including the subdomain that should direct to the application.
 	  Port: A localhost port that the target application is running on.
 	  Organization: An optional organization that the application lives under. Defaults to general
+	
+	It is important to note you will need the domain already pointing at this server so we can aquire a SSL certificate.
 HEREDOC
 )
 readonly DOC_EXAMPLE="$0 wiki.example.com 20001 hanson"
@@ -51,7 +53,7 @@ readonly CONFIG_FILENAME="${FQDN}_RProxy_SSL"
 
 ui_section "$DOC_NAME"
 
-# Task 1 
+# Task: setup config file 
 ui_task_start "Setup reverse proxy config file"
 perform_task=$?
 
@@ -125,16 +127,47 @@ setup_proxy_config() {
 }
 if [ "$perform_task" -eq 0 ]; then 
     setup_proxy_config; 
-    proxy_config_setup=$?
+    is_proxy_config_setup=$?
 else
     log_warn "You chose not to run this task."
-    proxy_config_setup=1
+    is_proxy_config_setup=1
 fi
 ui_task_end
 
 
+
+
+
+# Task: setup config file 
+ui_task_start "Setup reverse proxy config file"
+perform_task=$?
+
+setup_ssl() {
+
+    # Check if safe and needed
+    ui_task_note "Checking if task is safe to run and if it is needed."
+
+    # Do task
+    ui_task_note "Performing Task."
+
+    # Check for errors
+    ui_task_note "Checking for errors."
+
+}
+if [ "$perform_task" -eq 0 ]; then
+    setup_ssl;
+    is_ssl_setup=$?
+else
+    log_warn "You chose not to run this task."
+    is_ssl_setup=1
+fi
+ui_task_end
+
+
+
+
 #assuming the file got created correctly, we now need to reload nginx for it to take effect.
-if [ "$proxy_config_setup" -eq 0 ]; then
+if [ "$is_proxy_config_setup" -eq 0 ]; then
     sudo service nginx reload
 fi
 
@@ -142,7 +175,7 @@ fi
 # Summery
 ui_section_summery_start "$DOC_NAME" 
 
-if [ "$proxy_config_setup" -eq 0 ]; then
+if [ "$is_proxy_config_setup" -eq 0 ]; then
     ui_task_note "Proxy redirect config file for $FQDN has been setup at ${SRV_PATH}${CONFIG_FILENAME} with a symlink to ${NGINX_SITES_ENABLED_PATH}${CONFIG_FILENAME} created."
     ui_task_note "NGINX config was reloaded so config file can take effect."
 else
