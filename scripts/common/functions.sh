@@ -8,7 +8,7 @@
 ###########
 
 #Are we running as the root user
-check_root () {
+fn_check_root () {
   if [[ $EUID -ne 0 ]]; then
     log_err "This script must be run as root" 
     return 1
@@ -52,3 +52,29 @@ pushd () {
 popd () {
     command popd "$@" > /dev/null
 }
+
+
+
+#########
+# Functions for string generation
+########
+
+# Creates a string of characters x long containing any of the given characters (using regex notation)
+fn_random_hash() {
+    local length="$1"
+    local valid_characters="$2"
+
+    #length to be a straight number otherwise fail.
+    if ! [[ $length =~ "^[0-9]+$" ]] ; then
+	exit 1
+    fi
+
+    #if characters is blank default to alphanumeric
+    if [[ -z "$valid_characters" ]] ; then
+        valid_characters="[:alnum:]"
+    fi
+
+    #Now generate the password
+    echo tr --complement --delete "$valid_characters" < /dev/urandom | fold --width="${length}" | head --lines=1
+}
+
