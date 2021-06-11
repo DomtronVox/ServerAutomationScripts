@@ -66,6 +66,9 @@ setup_nodejs() {
     log_msg "Installing nodejs and npm..."
     sudo apt install --yes nodejs npm
 
+    log_msg "Backtracking NPM to version 6 because some apps require an older NPM (NodeBB)."
+    npm install --global npm@6
+
     # Check for errors
     ui_task_note "Checking for errors."
     
