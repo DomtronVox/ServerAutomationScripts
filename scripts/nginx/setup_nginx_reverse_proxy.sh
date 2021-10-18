@@ -4,6 +4,9 @@
 source "$(dirname "${BASH_SOURCE[0]}")/../common/source_all_common.sh"
 
 
+###############
+#  Script Documentation
+
 # Define the scripts help documentation variables that can be printed if the script is misused
 readonly DOC_NAME="Setup NGINX Reverse Proxy Domain"
 readonly DOC_DESCRIPTION="Creates the configuration so NGINX redirects traffic for a given FQDN to a localhost port that the application is running on. Also makes usre it is secured with an SSL."
@@ -18,6 +21,13 @@ HEREDOC
 )
 readonly DOC_EXAMPLE="$0 wiki.example.com 20001 hanson"
 
+
+
+
+
+
+####################
+#  Process Arguments
 
 #check for needed arguments
 if [[  -z "$1" || -z "$2" ]]; then
@@ -38,7 +48,7 @@ else
 fi
 
 ## location of the template file we will be using
-readonly TEMPLATE_FILEPATH="$(dirname "${BASH_SOURCE[0]}")/../../custom_files/nginx/reverse_proxy_template"
+readonly TEMPLATE_FILEPATH="$(dirname "${BASH_SOURCE[0]}")/../../app_files/nginx/reverse_proxy_template"
 
 ## location for the config file to live at
 readonly SRV_PATH="/srv/${ORGANIZATION}/nginx/"
@@ -49,6 +59,13 @@ readonly NGINX_SITES_ENABLED_PATH="/etc/nginx/sites-enabled/"
 ## Name of the reverse proxy config file
 readonly CONFIG_FILENAME="${FQDN}_RProxy_SSL"
 
+
+
+
+
+
+#######################
+# Perform Script Tasks
 
 
 ui_section "$DOC_NAME"
@@ -172,7 +189,13 @@ if [ "$is_proxy_config_setup" -eq 0 ]; then
 fi
 
 
-# Summery
+
+
+
+###################
+# Cleanup & Summery
+
+
 ui_section_summery_start "$DOC_NAME" 
 
 if [ "$is_proxy_config_setup" -eq 0 ]; then

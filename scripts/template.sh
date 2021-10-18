@@ -4,6 +4,12 @@
 ## IMPORTANT TODO: make sure path is relative from the script and goes to the common directory
 source "$(dirname "${BASH_SOURCE[0]}")/common/source_all_common.sh"
 
+echo "This is a template, do not run."
+exit 1
+
+
+#####################
+# Script Documentation
 
 # Define the scripts help documentation variables that can be printed if the script is misused
 readonly DOC_NAME="Template Script"
@@ -17,9 +23,11 @@ HEREDOC
 readonly DOC_EXAMPLE="$0 example_arg"
 
 
-# Define config variables here
 
 
+
+###################
+# Process Arguments
 
 
 #check for needed inputs
@@ -28,6 +36,13 @@ if [[  -z "$1" || -z "$2" ]]; then
     help_text "$DOC_DESCRIPTION" "$DOC_USAGE" "$DOC_EXAMPLE"
     exit 1 # general Error
 fi
+
+
+
+
+
+#####################
+# Perform Script Tasks
 
 
 ui_section "$DOC_NAME"
@@ -60,7 +75,13 @@ ui_task_end
 #...
 
 
-# Summery
+
+
+
+
+###################
+# Cleanup & Summery
+
 ui_section_summery_start "$DOC_NAME" 
 
 ui_task_note "First thing that was done."
