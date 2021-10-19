@@ -30,16 +30,14 @@ Scripts should follow, in not particular order, these guidelines:
     * Every __script__ is designed to accomplish a specific __job__. For example "install nginx".
     * Every __job__ will be broken down into one or more logical __tasks__ that follow a 3 part pattern: Check if safe, do task, check for errors.
 
-I will be using rust applications as much as possible followed by node.js then C/C++. I'd like to use all rust applications if possible, but will pick another application if one doesn't exist or the rust one is simply bad. This is mostly a preferance and my opinion on it may change.
-
 
 ## Services and Applications Used
 
 Scripts should be able to do the following using the listed applications:
 
 * Init and shutdown scripts to make sure server restarts go smoothly.
-* Automatic Let's Encrypt renewal for sitewide SSL.
-* OAuth server to allow site-wide single sign-on.
+* [**Certbot**](https://github.com/certbot) for automatic Let's Encrypt renewal for sitewide SSL.
+* [**ORY Hydra**](https://github.com/ory/hydra) OAuth server to allow site-wide single sign-on.
 * [**Nginx**](https://nginx.org/) proxy that handles routing requests to the right application and serving the webpage portion of the website.
 * [**NodeBB**](https://nodebb.org/) to serve as the forum.
 * [**Veaos**](https://github.com/veaos/veaos) to serve as a Q&A board (like stackoverflow).

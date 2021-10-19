@@ -64,12 +64,12 @@ fn_random_hash() {
     local length="$1"
     local valid_characters="$2"
 
-    #length to be a straight number otherwise fail.
+    #Length is to be a number only otherwise the function fails.
     if ! [[ $length =~ "^[0-9]+$" ]] ; then
 	exit 1
     fi
 
-    #if characters is blank default to alphanumeric
+    #if valid characters is blank default to alphanumeric
     if [[ -z "$valid_characters" ]] ; then
         valid_characters="[:alnum:]"
     fi

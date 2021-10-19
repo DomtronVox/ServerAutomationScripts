@@ -75,13 +75,13 @@ ui_press_any_key() {
     log_msg ">>> Press any key to continue <<<"
     local proceed
     read -n 1 -s proceed 
-    # -n x reads x characters instead of waiting for a newline. so triggers after pressing any keys 
-    # -s makes read no echo typed characters
+    # -n reads x characters instead of waiting for a newline. so triggers after pressing any keys 
+    # -s makes read not echo characters when typing input
 }
 
 
-# Requests a Y/n answer and returns fail or sucess based on the answer
-## Optionally needs 2 args, a string that is a msg to print and a optional letter (y or n) that indicates the default
+# Requests a Y/n answer and returns fail or success based on the answer
+## Optionally needs 2 args, a string that is a msg to print and an optional letter (y or n) that indicates the default
 ##Returns 0 if yes was selected and 1 if no was selected
 ui_query_yn() {
     local msg=$1
