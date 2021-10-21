@@ -5,6 +5,7 @@
 # Functions that check variable types
 ###########
 
+#Tests if a given string exists as a function
 is_function() { declare -Ff "$1" >/dev/null; }
 
 
