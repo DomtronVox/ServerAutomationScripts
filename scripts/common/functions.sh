@@ -1,6 +1,14 @@
 #Include file defining some generic utility functions
 
 
+###########
+# Functions that check variable types
+###########
+
+is_function() { declare -Ff "$1" >/dev/null; }
+
+
+
 
 
 ###########
