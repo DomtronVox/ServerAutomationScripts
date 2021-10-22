@@ -38,12 +38,12 @@ install_nginx() {
     # Do task
     ui_task_note "Performing Task."
 
-    sudo apt install -y nginx
+    install_package nginx
 
     # Check for errors
     ui_task_note "Checking for errors."
     if ! which nginx > /dev/null 2>&1; then
-        log_err "nginx failed to install. See the apt output above for errors."
+        log_err "nginx failed to install. See the output above for errors."
         return 1
     else
         log_msg "No errors detected."
@@ -80,7 +80,7 @@ setup_letsencrypt() {
     ui_task_note "Performing Task."
     
     log_msg "Install certbot and the NGINX certbot plugin..."
-    sudo apt install --assume-yes certbot python3-certbot-nginx
+    install_package certbot python3-certbot-nginx
 
     log_msg "Tell certbot to create the nginx specific config files we will use in nginx config files..."
     # c is for cancel since we don't want to enter any domains for this

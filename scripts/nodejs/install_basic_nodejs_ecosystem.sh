@@ -21,9 +21,7 @@ readonly DOC_EXAMPLE="$0 admin secretcat"
 ##MongoDB related values
 ##values based on https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/ refer to it when updating for other versions or OS'
 readonly MONGODB_USER="mongodb"
-readonly MONGODB_APT_SOURCES_PATH="/etc/apt/sources.list.d/mongodb-org-4.4.list"
 readonly MONGODB_PGP_KEY="https://www.mongodb.org/static/pgp/server-4.4.asc"
-readonly MONGODB_APT_Entry="deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse"
 readonly MONGODB_CONFIGFILE_PATH="/etc/mongod.conf"
 
 
@@ -47,6 +45,54 @@ else
 fi
 
 
+#Function to assist in installing the MongoDB repo
+add_mongodb_repo(){
+
+    log_msg "Adding MongoDB PGP Key..."
+    download_pgp_key "$MONGODB_PGP_KEY"
+
+    local program=$(which_package_manager)
+
+    #install repo to apt
+    if [[ "$program" -eq "apt" ]]; then
+
+        local MONGODB_APT_Entry="deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse"
+        local MONGODB_APT_SOURCES_PATH="/etc/apt/sources.list.d/mongodb-org-4.4.list"
+        if [[ ! -e "$MONGODB_APT_SOURCES_PATH" ]]; then
+            log_msg "Adding MongoDB Package repo to apt..."
+            
+            echo "$MONGODB_APT_Entry" | sudo tee "$MONGODB_APT_SOURCES_PATH"
+            sudo apt update
+
+	    return
+	fi
+        
+	log_warn "MongoDB repo does not need adding because file exists at ${MONGODB_APT_SOURCES_PATH}."
+	return
+    fi
+
+    #install repo to yum
+#    if [[ "$program" -eq "yum" ]]; then 
+#        log_msg "Adding MongoDB Package repo to yum..."
+#
+#	local MONGODB_YUM_SOURCES_PATH="/etc/yum.repos.d/mongodb-org-5.0.repo"
+#        sudo tee "$MONGODB_YUM_SOURCES_PATH" <<- HEREDOC
+#	[mongodb-org-5.0]
+#	name=MongoDB Repository
+#	baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/5.0/x86_64/
+#	gpgcheck=1
+#	enabled=1
+#	gpgkey=https://www.mongodb.org/static/pgp/server-5.0.asc
+#HEREDOC       
+#        return
+#    fi
+
+    log_warn "Could not add MongoDB repo as no supported package manager was detected. It's possible your system's Package Manager already has it by default, so this isn't nessiarily an error."
+}
+
+
+
+
 # Task: Setup nodejs and npm
 ui_task_start "Setup NodeJS and NPM"
 perform_task=$?
@@ -64,7 +110,7 @@ setup_nodejs() {
     ui_task_note "Performing Task."
 
     log_msg "Installing nodejs and npm..."
-    sudo apt install --yes nodejs npm
+    install_package nodejs npm
 
     log_msg "Backtracking NPM to version 6 because some apps require an older NPM (NodeBB)."
     npm install --global npm@6
@@ -90,6 +136,53 @@ ui_task_end
 
 
 #Task: install and configure mongodb
+
+#Utility Function for task to assist in installing the MongoDB repo
+add_mongodb_repo(){
+
+    log_msg "Adding MongoDB PGP Key..."
+    download_pgp_key "$MONGODB_PGP_KEY"
+
+    local program=$(which_package_manager)
+
+    #install repo to apt
+    if [[ "$program" -eq "apt" ]]; then
+
+        local MONGODB_APT_Entry="deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse"
+        local MONGODB_APT_SOURCES_PATH="/etc/apt/sources.list.d/mongodb-org-4.4.list"
+        if [[ ! -e "$MONGODB_APT_SOURCES_PATH" ]]; then
+            log_msg "Adding MongoDB Package repo to apt..."
+
+            echo "$MONGODB_APT_Entry" | sudo tee "$MONGODB_APT_SOURCES_PATH"
+            sudo apt update
+
+            return
+        fi
+
+        log_warn "MongoDB repo does not need adding because file exists at ${MONGODB_APT_SOURCES_PATH}."
+        return
+    fi
+
+    #install repo to yum
+#    if [[ "$program" -eq "yum" ]]; then 
+#        log_msg "Adding MongoDB Package repo to yum..."
+#
+#       local MONGODB_YUM_SOURCES_PATH="/etc/yum.repos.d/mongodb-org-5.0.repo"
+#        sudo tee "$MONGODB_YUM_SOURCES_PATH" <<- HEREDOC
+#       [mongodb-org-5.0]
+#       name=MongoDB Repository
+#       baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/5.0/x86_64/
+#       gpgcheck=1
+#       enabled=1
+#       gpgkey=https://www.mongodb.org/static/pgp/server-5.0.asc
+#HEREDOC       
+#        return
+#    fi
+
+    log_warn "Could not add MongoDB repo as no supported package manager was detected. It's possible your system's Package Manager already has it by default, so this isn't nessiarily an error."
+}
+
+
 ui_task_start "Install and Configure MongoDB"
 perform_task=$?
 
@@ -98,7 +191,7 @@ install_mongodb() {
     ui_task_note "Checking if task is safe to run and if it is needed."
 
     if which mongod > /dev/null 2>&1; then
-        log_warn "Nodejs and npm are installed"
+        log_warn "MongoDB Already installed."
         return 1
     fi
 
@@ -107,20 +200,11 @@ install_mongodb() {
 
 
     ##only add the apt repo if it doesn't already exist
-    if [[ ! -e "$MONGODB_APT_SOURCES_PATH" ]]; then
-        log_msg "Adding MongoDB PGP Key..."
-        wget -qO - "$MONGODB_PGP_KEY" | sudo apt-key add -
-
-        log_msg "Adding MongoDB Package repo..."
-        echo "$MONGODB_APT_Entry" | sudo tee "$MONGODB_APT_SOURCES_PATH"
-	sudo apt update
-    fi
-
-
+    add_mongodb_repo
 
 
     log_msg "Installing Mongodb..."
-    sudo apt install --yes mongodb-org
+    install_package mongodb-org
 
 
 
@@ -177,7 +261,7 @@ install_mongodb() {
     ui_task_note "Checking for errors."
 
     if ! which mongod > /dev/null 2>&1; then
-        log_warn "Nodejs and npm are installed"
+        log_err "Something went wrong! MongoDB was not installed."
         return 1
     fi
 

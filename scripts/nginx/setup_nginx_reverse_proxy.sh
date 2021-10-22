@@ -48,7 +48,7 @@ else
 fi
 
 ## location of the template file we will be using
-readonly TEMPLATE_FILEPATH="$(dirname "${BASH_SOURCE[0]}")/../../app_files/nginx/reverse_proxy_template"
+readonly TEMPLATE_FILEPATH="${APP_FILES_PATH}/nginx/reverse_proxy_template"
 
 ## location for the config file to live at
 readonly SRV_PATH="/srv/${ORGANIZATION}/nginx/"
