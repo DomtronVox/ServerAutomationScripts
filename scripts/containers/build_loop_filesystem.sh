@@ -102,7 +102,7 @@ create_loopfile() {
         return 1
     #Check that there is room on the volume for the full requested sized
     elif [ $(df --block-size=1k --output=avail ${loopfile_path} | tail -n 1) -le ${loopfile_size} ]; then
-        log_warn "Not enough diskspace on the host system to create this loopfile."
+        log_warn "There is not enough diskspace on the host system to allow the sparse file to reach full capacity."
     fi
 
 
