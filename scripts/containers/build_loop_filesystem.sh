@@ -25,7 +25,7 @@ readonly DOC_USAGE=$(cat <<- HEREDOC
 	  [Filesysem_type]: By Deafult uses ${DEFAULT_FS_TYPE} but can be anything supported by the mkefs2 tool.
 HEREDOC
 )
-readonly DOC_EXAMPLE="$0 chroot/Loops/prt_srv.loop 200G"
+readonly DOC_EXAMPLE="$0 /chroot/dev/prt_srv.loop 200G"
 
 
 
