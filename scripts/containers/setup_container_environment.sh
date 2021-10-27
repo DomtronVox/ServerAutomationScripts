@@ -21,11 +21,12 @@ readonly DOC_EXAMPLE="$0"
 
 loopfile_lib_path="$(dirname "${BASH_SOURCE[0]}")/loopfile_lib"
 
-container_root_path="/chroot"
-container_dev_path="${container_root_path}/dev"
-container_data_path="${container_root_path}/data"
-container_mnt_path="${container_root_path}/mnt"
-container_rootfs_path="${container_root_path}/rootfs_tars"
+#These are all defined in the common/vars.sh
+#CHROOT_BASE_PATH
+#CHROOT_DEV_PATH
+#CHROOT_DATA_PATH
+#CHROOT_MNT_PATH
+#CHROOT_ROOTFS_TARS_PATH
 
 
 ###################
@@ -42,18 +43,18 @@ container_rootfs_path="${container_root_path}/rootfs_tars"
 ui_section "$DOC_NAME"
 
 # Task 1: create container directory structure 
-ui_task_start "Create Container Directory Structure at $container_root_path"
+ui_task_start "Create Container Directory Structure at $CHROOT_BASE_PATH"
 perform_task=$?
 
 create_container_directories() {
     # Check if safe and needed
     ui_task_note "Checking if task is safe to run and if it is needed."
     
-    if [ -d "$container_dev_path"  ] &
-       [ -d "$container_data_path" ] &
-       [ -d "$container_mnt_path"  ] &
-       [ -d "$container_rootfs_path" ] &
-       [ -d "${container_dev_path}/lib" ]; then
+    if [ -d "$CHROOT_DEV_PATH"  ] &
+       [ -d "$CHROOT_DATA_PATH" ] &
+       [ -d "$CHROOT_MNT_PATH"  ] &
+       [ -d "$CHROOT_ROOTFS_TARS_PATH" ] &
+       [ -d "${CHROOT_DEV_PATH}/lib" ]; then
         log_warn "Container ecosystem folders already exist. Stopping task."
         return 1
     fi
@@ -72,18 +73,18 @@ create_container_directories() {
     ui_task_note "Performing Task."
 
     ui_task_note "Creating container ecosystem directory structure."
-    mkdir --parents "$container_dev_path" "$container_data_path" "$container_mnt_path" "$container_rootfs_path"
+    mkdir --parents "$CHROOT_DEV_PATH" "$CHROOT_DATA_PATH" "$CHROOT_MNT_PATH" "$CHROOT_ROOTFS_TARS_PATH"
 
     
-    if [ ! -d "${container_dev_path}/lib" ]; then
+    if [ ! -d "${CHROOT_DEV_PATH}/lib" ]; then
 
-        ui_task_note "Copying Loopfile mount scripts to ${container_dev_path}/lib"
+        ui_task_note "Copying Loopfile mount scripts to ${CHROOT_DEV_PATH}/lib"
         
-        mkdir --parents "${container_dev_path}/lib"
-        cp --recursive --preserve=all "${loopfile_lib_path}/." "${container_dev_path}/lib/"
+        mkdir --parents "${CHROOT_DEV_PATH}/lib"
+        cp --recursive --preserve=all "${loopfile_lib_path}/." "${CHROOT_DEV_PATH}/lib/"
     
     else
-        log_warn "Something is already at ${container_dev_path}/lib so not copying loopfile mount scripts. You may need to manually do this if this is an error."
+        log_warn "Something is already at ${CHROOT_DEV_PATH}/lib so not copying loopfile mount scripts. You may need to manually do this if this is an error."
     fi
 
 
@@ -92,11 +93,11 @@ create_container_directories() {
     # Check for errors
     ui_task_note "Checking for errors."
     
-    if [ ! -d "$container_dev_path"   ] ||
-       [ ! -d "$container_data_path" ] ||
-       [ ! -d "$container_mnt_path"  ] ||
-       [ ! -d "$container_rootfs_path" ] ||
-       [ ! -d "${container_dev_path}/lib" ]; then
+    if [ ! -d "$CHROOT_DEV_PATH"   ] ||
+       [ ! -d "$CHROOT_DATA_PATH" ] ||
+       [ ! -d "$CHROOT_MNT_PATH"  ] ||
+       [ ! -d "$CHROOT_ROOTFS_TARS_PATH" ] ||
+       [ ! -d "${CHROOT_DEV_PATH}/lib" ]; then
         log_err "Container ecosystem folders not created. See above output for any errors."
         return 1
     fi
@@ -124,7 +125,7 @@ ui_task_end
 ui_section_summery_start "$DOC_NAME" 
 
 if [ "$create_container_directories_ok" -eq 0 ]; then
-    ui_task_note "Created container directory structure at $container_root_path and installed loopfile mount scripts."
+    ui_task_note "Created container directory structure at $CHROOT_BASE_PATH and installed loopfile mount scripts."
 else
     log_warn "We were unable to create the container directory structure. See above messages for any errors."
 fi
