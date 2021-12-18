@@ -196,17 +196,20 @@ ui_section_summery_end() {
 ## Returns 0 for perform task and 1 for do not perform task.
 ui_task_start() {
     local title=$1
+    ui_task_start_no_query "$title"
+    ui_query_yn "Perform task ${title}?" "n"
+    return $?
+}
+
+ui_task_start_no_query() {
+    local title=$1
     log_msg "$(cat <<- HEREDOC
 	
 	-------------------------------------------
 	... Begining Task: ${GREEN}${title}${NOCLR} ...
 	HEREDOC
     )"
-
-    ui_query_yn "Perform task ${title}?" "n"
-    return $?
 }
-
 
 # Prints out text dennoting a task has ended
 ## Needs no arguments

@@ -26,6 +26,21 @@ fn_check_root () {
 
 
 
+###########
+# Functions for file path manipulation
+###########
+
+#Fix path string to remove extra / and resolve .. characters so //tmp/../tmp becomes /tmp
+fix_filesystem_path() {
+  echo $(readlink -m "$1")
+}
+
+#join paths so they don't have double /
+join_path() {
+  echo "${$1%/}/${$2#/}"
+}
+
+
 
 ###########
 # Functions for Template Manipulation
