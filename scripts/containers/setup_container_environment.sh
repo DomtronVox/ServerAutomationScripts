@@ -59,7 +59,7 @@ create_container_directories() {
         return 1
     fi
 
-    #make sure out loopfile lib files are accessible
+    #make sure our loopfile library scripts folder is accessible
     if [ ! -d "$loopfile_lib_path" ]; then
         log_err "Expected loopfile mountscripts at $loopfile_lib_path but they are missing! Stopping task."
         return 1

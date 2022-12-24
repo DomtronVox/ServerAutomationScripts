@@ -21,9 +21,9 @@ readonly DOC_EXAMPLE="$0 /chroot/dev/base-container.loop"
 
 
 #These are all defined in the common/vars.sh
-#CHROOT_DEV_PATH
-#CHROOT_DATA_PATH
-#CHROOT_MNT_PATH
+# >CHROOT_DEV_PATH
+# >CHROOT_DATA_PATH
+# >CHROOT_MNT_PATH
 
 
 
@@ -43,7 +43,7 @@ loopfile_path=$(echo "$1" | sed 's+[^(\\/)]*$++g')
 loopfile_name=$(echo "$1" | sed 's+.*/++')
 container_id=$(echo "$loopfile_name" | sed 's+\.loop++')
 
-loopfile_mnt_path="${CHROOT_DATA_PATH}/${container_id}/"
+loopfile_data_path="${CHROOT_DATA_PATH}/${container_id}/"
 
 
 #Make sure the given loopfile exists and is a loopfile
@@ -135,8 +135,8 @@ setup_overlay_files() {
     # Check if safe and needed
     ui_task_note "Checking if task is safe to run and if it is needed."
 
-    if [ -e "${loopfile_mnt_path}/lib/mount.sh" ] ||
-       [ -e "${loopfile_mnt_path}/lib/unmount.sh" ]; then
+    if [ -e "${loopfile_data_path}/lib/mount.sh" ] ||
+       [ -e "${loopfile_data_path}/lib/unmount.sh" ]; then
         log_err "Found container scripts and folders already setup in loopfile. Will not proceed with task."
         return 1
     fi
@@ -145,29 +145,29 @@ setup_overlay_files() {
     ui_task_note "Performing Task."
    
     # Pop into the mounted loopfile and create the directory structure
-    pushd "${loopfile_mnt_path}"
+    pushd "${loopfile_data_path}"
     mkdir --parents "lib" "config/container" "ol_upper" "ol_work"
     popd
 
     # copy container scripts into the loopfile
-    cp --recursive --preserve=all "container_lib/." "${loopfile_mnt_path}/lib"
+    cp --recursive --preserve=all "container_lib/." "${loopfile_data_path}/lib"
 
     # Add the container id to the container config for use in scripts
-    $(echo "$container_id" > "${loopfile_mnt_path}/config/container/container_id")
+    $(echo "$container_id" > "${loopfile_data_path}/config/container/container_id")
 
 
     # Check for errors
     ui_task_note "Checking for errors."
 
-    if [ ! -d "${loopfile_mnt_path}/lib"      ] ||
-       [ ! -d "${loopfile_mnt_path}/config"   ] ||
-       [ ! -d "${loopfile_mnt_path}/ol_upper" ] ||
-       [ ! -d "${loopfile_mnt_path}/ol_work"  ]; then
+    if [ ! -d "${loopfile_data_path}/lib"      ] ||
+       [ ! -d "${loopfile_data_path}/config"   ] ||
+       [ ! -d "${loopfile_data_path}/ol_upper" ] ||
+       [ ! -d "${loopfile_data_path}/ol_work"  ]; then
         log_err "Container folders not created. See above output for any errors."
         return 1
     fi
 
-    if [ ! -e "${loopfile_mnt_path}/lib/mount.sh" ]; then
+    if [ ! -e "${loopfile_data_path}/lib/mount.sh" ]; then
         log_err "Container scripts not added to loopfile. See above output for any errors."
         return 1
     fi
@@ -189,7 +189,7 @@ ui_task_end
 
 ui_section_summery_start "$DOC_NAME" 
 
-ui_task_note "Mounted loopfile at ${loopfile_mnt_path}."
+ui_task_note "Mounted loopfile at ${loopfile_data_path}."
 
 if [ "$setup_overlay_files_ok" -eq 0 ]; then
     ui_task_note "Created container folder structure and moved scripts into loopfile."

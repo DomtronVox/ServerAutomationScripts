@@ -17,12 +17,12 @@ readonly DEFAULT_FS_TYPE="ext4"
 
 # Define the scripts help documentation variables that can be printed if the script is misused
 readonly DOC_NAME="Build Loop Filesystem"
-readonly DOC_DESCRIPTION="Creates a loopfile that is a mountable filesystem. The loopfile will be sparse only taking up space as it's filled with a max size based on the given size."
+readonly DOC_DESCRIPTION="Creates a loopfile that is a mountable filesystem. The loopfile will be sparse, meaning it only takes up space that is actually used but is limmited by a max size based on the given size."
 readonly DOC_USAGE=$(cat <<- HEREDOC
 	Provide a Filepath+Filename and filesize with an optional Filesystem type.
 	  Filename: Path and name of the file
-	  Filesize: Number followed by first letter of one of the following words: Megabyte, Gigabyte, Tarra byte
-	  [Filesysem_type]: By Deafult uses ${DEFAULT_FS_TYPE} but can be anything supported by the mkefs2 tool.
+	  Max_Size: Number followed by first letter of one of the following words: Megabyte, Gigabyte, Tarra byte
+	  [Filesystem_Type]: By Deafult uses ${DEFAULT_FS_TYPE} but can be anything supported by the mkefs2 tool.
 HEREDOC
 )
 readonly DOC_EXAMPLE="$0 /chroot/dev/prt_srv.loop 200G"
